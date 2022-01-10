@@ -1,0 +1,76 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:stable-alpine
+    restart: always
+    ports:
+      - 443:443/tcp
+      - 80:80/tcp
+    volumes:
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./nginx/templates:/etc/nginx/templates:ro
+    environment:
+      - HOST=${HOST}
+      - V2RAY_SERVER_PORT=v2ray-plugin:1984
+      - V2RAY_PATH=${V2RAY_PATH}
+      - NPS_PORT=80
+    labels:
+      - sh.acme.autoload.domain=${HOST}
+    #command: [nginx-debug, '-g', 'daemon off;']
+
+  acme.sh:
+    image: neilpang/acme.sh
+    command: daemon
+    restart: always
+    volumes:
+      - ./acmeout:/acme.sh
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DEPLOY_DOCKER_CONTAINER_LABEL=sh.acme.autoload.domain=${HOST}
+      #- DEPLOY_DOCKER_CONTAINER_KEY_FILE=/etc/nginx/ssl/${HOST}/key.pem
+      #- DEPLOY_DOCKER_CONTAINER_CERT_FILE=/etc/nginx/ssl/${HOST}/cert.pem
+      #- DEPLOY_DOCKER_CONTAINER_CA_FILE=/etc/nginx/ssl/${HOST}/ca.pem
+      #- DEPLOY_DOCKER_CONTAINER_FULLCHAIN_FILE=/etc/nginx/ssl/${HOST}/full.pem
+      - DEPLOY_DOCKER_CONTAINER_RELOAD_CMD="service nginx force-reload"
+
+  ssserver:
+    image: ghcr.io/shadowsocks/ssserver-rust
+    restart: always
+    ports:
+      - 8388:8388/tcp
+      - 8388:8388/udp
+    volumes:
+      - ./shadowsocks-rust:/etc/shadowsocks-rust:ro
+      - ./shadowsocks-libev/src/acl:/etc/shadowsocks-rust/acl:ro
+    command: --acl /etc/shadowsocks-rust/acl/server_block_chn.acl
+
+  v2ray-plugin:
+    build:
+      context: ./v2ray-plugin
+    restart: always
+    depends_on:
+      - ssserver
+    command: -server -remoteAddr "ssserver" -remotePort 8388 -localAddr 0.0.0.0 -localPort 1984 -host ${HOST}
+
+  nps:
+    image: ffdfgdfg/nps
+    restart: always
+    volumes:
+      - ./nps/conf:/conf
+    ports:
+      - 8024:8024/tcp
+      #- 8024:8024/udp
+      - 60100-60110:60100-60110/tcp
+      - 60100-60110:60100-60110/udp
+
+  frps:
+    build:
+      context: ./frps
+    restart: always
+    volumes:
+      - ./frps/conf:/conf
+    ports:
+      - 7000:7000/tcp
+      - 60200-60210:60200-60210/tcp
+      - 60200-60210:60200-60210/udp

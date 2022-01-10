@@ -1,0 +1,33 @@
+{
+	"servers": [
+		{
+			"address": "0.0.0.0",
+			"port": 8388,
+			"password": "password",
+			"method": "aes-256-gcm"
+		},
+		{
+			"address": "::",
+			"port": 8388,
+			"password": "password",
+			"method": "aes-256-gcm"
+		}
+
+	],
+
+	"mode": "tcp_and_udp",
+
+	"dns": "google",
+	"no_delay": false,
+	"keep_alive": 15,
+	"ipv6_first": false,
+	"ipv6_only": false,
+
+	"runtime": {
+		"mode": "multi_thread",
+		"worker_count": 4
+	},
+
+	"manager_address": "0.0.0.0",
+	"manager_port": 6100
+}
