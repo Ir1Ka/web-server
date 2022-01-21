@@ -36,11 +36,11 @@ for url in $(echo "${api_content}" | jq -r '.assets[].browser_download_url'); do
   ! echo $url | grep -q "${OS}_${ARCH}" || wget $url -O- | tar xz
 done
 test -d frp_${VERSION}_${OS}_${ARCH}
-mkdir -p ./work
-cp ./frp_${VERSION}_${OS}_${ARCH}/frps ./work/
-mkdir -p ./work/conf
-cp ./frp_${VERSION}_${OS}_${ARCH}/frps*.ini ./work/conf
+mv frp_${VERSION}_${OS}_${ARCH}/frps ./
+mkdir -p conf
+mv frp_${VERSION}_${OS}_${ARCH}/frps*.ini conf/
+rm -rf frp_${VERSION}_${OS}_${ARCH}
 
 apk del wget jq --purge
 
-./work/frps --version
+./frps --version

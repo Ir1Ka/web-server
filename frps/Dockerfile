@@ -1,5 +1,5 @@
 FROM alpine AS downloader
-WORKDIR /
+WORKDIR /work
 COPY install.sh /
 RUN /install.sh
 

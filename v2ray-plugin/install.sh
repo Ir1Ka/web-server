@@ -34,7 +34,7 @@ for url in $(wget -qO- -t1 -T2 "${API}" | jq -r '.assets[].browser_download_url'
   ! echo $url | grep -q "${OS}-${ARCH}" || wget $url -O- | tar xz
 done
 test -f v2ray-plugin_${OS}_${ARCH}
-ln -s v2ray-plugin_${OS}_${ARCH} v2ray-plugin
+mv v2ray-plugin_${OS}_${ARCH} v2ray-plugin
 
 apk del wget jq --purge
 
