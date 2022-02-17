@@ -15,7 +15,6 @@ services:
       - HOST=${HOST}
       - V2RAY_SERVER_PORT=v2ray-plugin:1984
       - V2RAY_PATH=${V2RAY_PATH}
-      - NPS_PORT=80
     labels:
       - sh.acme.autoload.domain=${HOST}.${DOMAIN}
     #command: [nginx-debug, '-g', 'daemon off;']
