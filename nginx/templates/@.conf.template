@@ -2,7 +2,7 @@ server {
         listen      443 ssl http2;
         listen [::]:443 ssl http2;
 
-        server_name ${HOST};
+        server_name ${HOST}.${DOMAIN};
 
         ssl_certificate         /etc/nginx/ssl/${HOST}/full.pem;
         ssl_certificate_key     /etc/nginx/ssl/${HOST}/key.pem;

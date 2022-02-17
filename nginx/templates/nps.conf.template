@@ -2,10 +2,10 @@ server {
         listen      443 ssl http2;
         listen [::]:443 ssl http2;
 
-        server_name nps.${HOST} *.nps.${HOST};
+        server_name nps.${HOST}.${DOMAIN} *.nps.${HOST}.${DOMAIN};
 
-        ssl_certificate         /etc/nginx/ssl/nps.${HOST}/full.pem;
-        ssl_certificate_key     /etc/nginx/ssl/nps.${HOST}/key.pem;
+        ssl_certificate         /etc/nginx/ssl/${HOST}.nps/full.pem;
+        ssl_certificate_key     /etc/nginx/ssl/${HOST}.nps/key.pem;
         ssl_protocols           TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
         ssl_session_cache       shared:SSL:1m;
         ssl_session_timeout     10m;
