@@ -1,9 +1,12 @@
 [submodule "shadowsocks-rust/src"]
 	path = shadowsocks-rust/src
 	url = https://github.com/shadowsocks/shadowsocks-rust.git
+	branch = master
 [submodule "shadowsocks-libev/src"]
 	path = shadowsocks-libev/src
 	url = https://github.com/shadowsocks/shadowsocks-libev.git
+	branch = master
 [submodule "nps/src"]
 	path = nps/src
 	url = https://github.com/ehang-io/nps.git
+	branch = master
