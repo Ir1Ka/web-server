@@ -4,8 +4,8 @@ server {
 
         server_name ${HOST}.${DOMAIN};
 
-        ssl_certificate         /etc/nginx/ssl/${HOST}/full.pem;
-        ssl_certificate_key     /etc/nginx/ssl/${HOST}/key.pem;
+        ssl_certificate         /etc/nginx/ssl/${HOST}-full.pem;
+        ssl_certificate_key     /etc/nginx/ssl/${HOST}-key.pem;
         ssl_protocols           TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
         ssl_session_cache       shared:SSL:1m;
         ssl_session_timeout     10m;

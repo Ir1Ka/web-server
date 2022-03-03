@@ -16,7 +16,7 @@ services:
       - V2RAY_SERVER_PORT=v2ray-plugin:1984
       - V2RAY_PATH=${V2RAY_PATH}
     labels:
-      - sh.acme.autoload.domain=${HOST}.${DOMAIN}
+      - sh.acme.autoload.domain=${DOMAIN}
     #command: [nginx-debug, '-g', 'daemon off;']
 
   acme.sh:
@@ -27,19 +27,19 @@ services:
       - ./acmeout:/acme.sh
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - DEPLOY_DOCKER_CONTAINER_LABEL=sh.acme.autoload.domain=${HOST}.${DOMAIN}
-      #- DEPLOY_DOCKER_CONTAINER_KEY_FILE=/etc/nginx/ssl/${HOST}/key.pem
-      #- DEPLOY_DOCKER_CONTAINER_CERT_FILE=/etc/nginx/ssl/${HOST}/cert.pem
-      #- DEPLOY_DOCKER_CONTAINER_CA_FILE=/etc/nginx/ssl/${HOST}/ca.pem
-      #- DEPLOY_DOCKER_CONTAINER_FULLCHAIN_FILE=/etc/nginx/ssl/${HOST}/full.pem
       - DEPLOY_DOCKER_CONTAINER_RELOAD_CMD="service nginx force-reload"
+      - DEPLOY_DOCKER_CONTAINER_LABEL=sh.acme.autoload.domain=${DOMAIN}
+      #- DEPLOY_DOCKER_CONTAINER_KEY_FILE=/etc/nginx/ssl/${HOST}-key.pem
+      #- DEPLOY_DOCKER_CONTAINER_CERT_FILE=/etc/nginx/ssl/${HOST}-cert.pem
+      #- DEPLOY_DOCKER_CONTAINER_CA_FILE=/etc/nginx/ssl/${HOST}-ca.pem
+      #- DEPLOY_DOCKER_CONTAINER_FULLCHAIN_FILE=/etc/nginx/ssl/${HOST}-full.pem
 
   ssserver:
     image: ghcr.io/shadowsocks/ssserver-rust
     restart: always
     ports:
-      - 8388:8388/tcp
-      - 8388:8388/udp
+      - 63333:8388/udp
+      #- 8388:8388/tcp
     volumes:
       - ./shadowsocks-rust:/etc/shadowsocks-rust:ro
       - ./shadowsocks-libev/src/acl:/etc/shadowsocks-rust/acl:ro
@@ -61,5 +61,6 @@ services:
     ports:
       - 8024:8024/tcp
       #- 8024:8024/udp
-      - 60100-60110:60100-60110/tcp
-      - 60100-60110:60100-60110/udp
+      # Too many port mappings will result in more memory usage at runtime (more memory is required at startup)
+      - 60100-60104:60100-60104/tcp
+      - 60100-60104:60100-60104/udp
